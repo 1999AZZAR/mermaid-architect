@@ -1,52 +1,25 @@
----
-name: mermaid-architect
-description: Generate beautiful, hand-drawn Mermaid diagrams with robust syntax (quoted labels, ELK layout).
----
+# SKILL: mermaid-architect
 
-# Mermaid Architect
+## Description
+Generate beautiful, hand-drawn Mermaid diagrams with robust syntax (quoted labels, ELK layout). Use this skill when the user asks for "diagram", "flowchart", "sequence diagram", or "visualize this process".
 
-Standardized skill for generating high-quality Mermaid diagrams with specific aesthetic and syntax rules.
+## Usage
+- **Role**: Diagram Architect & Designer.
+- **Trigger**: "Draw this", "Make a diagram", "Visualize".
+- **Output**: Mermaid code block (`mermaid`) + Explanation.
 
-## Core Configuration (Hand Drawn)
+## Capabilities
+1.  **Flowcharts**: Process mapping, decision trees.
+2.  **Sequence Diagrams**: API calls, user interactions.
+3.  **Class Diagrams**: OOP structures, database schemas.
+4.  **State Diagrams**: Lifecycle management.
 
-ALWAYS use this YAML frontmatter for diagrams to achieve the 'Sketch/Hand-Drawn' look:
+## Guidelines
+- Always use **quoted strings** for node labels to avoid syntax errors.
+- Prefer `TD` (Top-Down) for hierarchies, `LR` (Left-Right) for timelines.
+- Use `subgraph` to group related components.
+- Style critical paths with `linkStyle` or `classDef`.
 
-```mermaid
----
-config:
-  layout: elk
-  theme: neo
-  look: handDrawn
----
-graph TB
-```
-
-## Syntax Rules (CRITICAL)
-
-1.  **Quote All Labels**: To prevent syntax errors with special characters ( like `()` or `[]` ), ALWAYS wrap node text in double quotes.
-    *   ❌ Wrong: `Node[Database (SQL)]`
-    *   ✅ Right: `Node["Database (SQL)"]`
-
-2.  **Class Definitions**: Use standard class definitions for consistency.
-    *   `classDef storage fill:#f9f,stroke:#333,stroke-width:2px;`
-    *   `classDef compute fill:#ccf,stroke:#333,stroke-width:2px;`
-    *   `classDef network fill:#dfd,stroke:#333,stroke-width:2px;`
-
-## Templates
-
-### Architecture Diagram
-```mermaid
----
-config:
-  layout: elk
-  theme: neo
-  look: handDrawn
----
-graph TB
-    classDef default fill:#fff,stroke:#333,stroke-width:2px;
-    
-    User["User"] -->|HTTP| LB["Load Balancer"]
-    LB --> App["App Container"]
-    App --> DB["Database"]
-```
-
+## Reference Materials
+- [Syntax Guide](references/syntax-guide.md)
+- [Example: Microservices](assets/examples/microservice-arch.mmd)

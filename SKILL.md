@@ -1,7 +1,9 @@
-# SKILL: mermaid-architect
+---
+name: mermaid-architect
+description: Generate beautiful, hand-drawn Mermaid diagrams with robust syntax (quoted labels, ELK layout). Use this skill when the user asks for "diagram", "flowchart", "sequence diagram", or "visualize this process".
+---
 
-## Description
-Generate beautiful, hand-drawn Mermaid diagrams with robust syntax (quoted labels, ELK layout). Use this skill when the user asks for "diagram", "flowchart", "sequence diagram", or "visualize this process".
+# Mermaid Architect
 
 ## Usage
 - **Role**: Diagram Architect & Designer.

@@ -17,11 +17,20 @@ description: Generate beautiful, hand-drawn Mermaid diagrams with robust syntax 
 4.  **State Diagrams**: Lifecycle management.
 
 ## Guidelines
-- Always use **quoted strings** for node labels to avoid syntax errors.
+- Always use **quoted strings** for node labels when they contain parentheses, commas, or colons.
+- Use safe node IDs: no spaces; use camelCase, PascalCase, or underscores. Avoid reserved IDs: `end`, `subgraph`, `graph`, `flowchart`.
 - Prefer `TD` (Top-Down) for hierarchies, `LR` (Left-Right) for timelines.
-- Use `subgraph` to group related components.
-- Style critical paths with `linkStyle` or `classDef`.
+- Use `subgraph id [Label]` with an explicit ID and label (no spaces in ID).
+- See [references/syntax-guide.md](references/syntax-guide.md) for full safe-syntax rules.
 
 ## Reference Materials
 - [Syntax Guide](references/syntax-guide.md)
 - [Example: Microservices](assets/examples/microservice-arch.mmd)
+- [Example: Sequence API](assets/examples/sequence-api.mmd)
+- [Example: State Lifecycle](assets/examples/state-lifecycle.mmd)
+
+## Validation
+Run the validator on one or more `.mmd` files:
+```bash
+scripts/validate-mmd assets/examples/*.mmd
+```

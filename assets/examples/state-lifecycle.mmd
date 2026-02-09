@@ -1,0 +1,9 @@
+stateDiagram-v2
+    [*] --> Created
+    Created --> Running: start
+    Running --> Paused: pause
+    Paused --> Running: resume
+    Running --> Completed: finish
+    Running --> Failed: error
+    Completed --> [*]
+    Failed --> [*]

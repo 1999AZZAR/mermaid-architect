@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""
+Validate .mmd files for Cursor-safe Mermaid syntax.
+Checks: reserved IDs, subgraph format, unquoted labels with special characters.
+"""
+import re
+import sys
+from pathlib import Path
+
+RESERVED_IDS = frozenset({"end", "subgraph", "graph", "flowchart"})
+SUBSCRIPT_PATTERN = re.compile(r"\[([^\]\"']+)\]")
+SUBGRAPH_PATTERN = re.compile(r"subgraph\s+([^\s\[]+)\s+\[")
+
+
+def validate_file(path: Path) -> list[str]:
+    errors = []
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        return [f"{path}: read error: {e}"]
+
+    lines = text.splitlines()
+    for i, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("%%"):
+            continue
+
+        for match in SUBSCRIPT_PATTERN.finditer(line):
+            label = match.group(1).strip()
+            if not label:
+                continue
+            if label.startswith('"') and label.endswith('"'):
+                continue
+            if any(c in label for c in "(),:"):
+                errors.append(
+                    f"{path}:{i}: unquoted label with special characters: [{label}]"
+                )
+
+        for rid in RESERVED_IDS:
+            if rid == "subgraph":
+                continue
+            if re.search(
+                rf"(^|\s){re.escape(rid)}(\s*\[|\s*{{|\s*\(|\s*-->|\s*--|\s*->)",
+                line,
+            ):
+                errors.append(f"{path}:{i}: reserved ID used as node ID: {rid}")
+
+        if "subgraph" in line and not SUBGRAPH_PATTERN.search(line):
+            if re.search(r"subgraph\s+[a-zA-Z_][a-zA-Z0-9_]*\s+\[", line):
+                pass
+            elif re.search(r"subgraph\s+", line):
+                errors.append(
+                    f"{path}:{i}: subgraph should use format: subgraph id [Label]"
+                )
+
+    return errors
+
+
+def main() -> int:
+    if len(sys.argv) < 2:
+        print("Usage: validate-mmd <file.mmd> [file2.mmd ...]", file=sys.stderr)
+        return 1
+
+    all_errors = []
+    for arg in sys.argv[1:]:
+        path = Path(arg)
+        if not path.exists():
+            all_errors.append(f"{path}: file not found")
+            continue
+        if path.suffix.lower() not in (".mmd", ".mmdc"):
+            all_errors.append(f"{path}: expected .mmd or .mmdc file")
+            continue
+        all_errors.extend(validate_file(path))
+
+    if all_errors:
+        for err in all_errors:
+            print(err, file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

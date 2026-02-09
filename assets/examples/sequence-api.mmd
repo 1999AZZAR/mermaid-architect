@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant Client
+    participant ApiGateway
+    participant Service
+
+    Client->>ApiGateway: POST /api/request
+    activate ApiGateway
+    ApiGateway->>Service: Forward
+    activate Service
+    Service-->>ApiGateway: Response
+    deactivate Service
+    ApiGateway-->>Client: 200 OK
+    deactivate ApiGateway

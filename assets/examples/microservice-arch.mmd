@@ -1,15 +1,13 @@
-graph TD
-    %% Define Styles
-    classDef node fill:#f9f,stroke:#333,stroke-width:4px;
-    classDef important fill:#f00,color:#fff;
+flowchart TD
+    subgraph frontend [Frontend]
+        UserNode["User"] -->|HTTP Request| LoadBalancer["Load Balancer"]
+    end
 
-    A[User] -->|HTTP Request| B(Load Balancer)
-    B -->|Route| C{Service Discovery}
-    C -- Valid --> D[API Gateway]
-    C -- Invalid --> E[404 Error]
-    D --> F[(Database)]
-    D --> G[(Redis Cache)]
+    LoadBalancer -->|Route| ServiceDiscovery{"Service Discovery"}
+    ServiceDiscovery -->|Valid| ApiGateway["API Gateway"]
+    ServiceDiscovery -->|Invalid| Error404["404 Error"]
 
-    %% Apply Styles
-    class A node;
-    class E important;
+    subgraph backend [Backend]
+        ApiGateway --> Db["Database"]
+        ApiGateway --> Cache["Redis Cache"]
+    end
